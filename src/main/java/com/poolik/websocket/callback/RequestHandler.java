@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface RequestHandler {
   public Pair<String, List<RequestType>> getRequestMappings();
-  public WebsocketResponse doRequest(WebsocketRequest request) throws Exception;
+  public WebsocketResponse handle(WebsocketRequest request) throws Exception;
 }

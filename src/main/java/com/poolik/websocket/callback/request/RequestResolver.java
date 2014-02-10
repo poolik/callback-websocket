@@ -13,7 +13,7 @@ public final class RequestResolver implements Callable<Response> {
 
   @Override
   public Response call() throws Exception {
-    WebsocketResponse response = RequestMappings.getRequestAction(request.url, request.type).doRequest(request);
+    WebsocketResponse response = RequestMappings.getRequestAction(request.url, request.type).handle(request);
     return new Response(request.callbackId, response);
   }
 }
