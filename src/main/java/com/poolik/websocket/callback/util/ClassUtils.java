@@ -27,8 +27,16 @@ public class ClassUtils {
       addIfNotNull(classFinder, getWebInfClassesDir(runningPath));
       addIfNotNull(classFinder, getLibraryDir(runningPath));
     }
-
+    addIfNotNull(classFinder, convertRunningPath(runningPath));
     return classFinder.findClasses(getClassFilter(interfaceName));
+  }
+
+  private static File convertRunningPath(String runningPath) {
+    try {
+      return new File(new URL(runningPath).getPath());
+    } catch (Exception e) {
+      return null;
+    }
   }
 
   private static void addContentRootFolderIfAvailable(ClassFinder classFinder) {
