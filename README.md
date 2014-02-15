@@ -1,7 +1,7 @@
 callback-websocket
 ==================
 
-A simple library to create request-response websockets.
+A simple library to create request-response queries over java Websockets API
 # Why?
 
 Time is ripe for using websockets in the wild. At least two latest versions of most common web browsers support them - http://caniuse.com/websockets. 
