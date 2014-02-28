@@ -196,7 +196,6 @@ public class F {
       };
 
       for (Promise<T> f : futures) {
-        System.out.println("calling onredeem " +  f);
         f.onRedeem(action);
       }
 
