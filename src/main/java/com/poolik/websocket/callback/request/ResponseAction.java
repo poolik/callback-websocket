@@ -25,10 +25,10 @@ public final class ResponseAction implements F.Action<F.Promise<Response>> {
       log.trace("Sending response to " + request.callbackId);
       Response requestResponse = result.getOrNull();
       try {
-        if (requestResponse != null) session.getBasicRemote().sendText(gson.toJson(requestResponse));
+        if (requestResponse != null) session.getAsyncRemote().sendText(gson.toJson(requestResponse));
         else {
           log.error("Request " + request.type + request.url + " failed with: ", result.getException());
-          session.getBasicRemote().sendText(gson.toJson(new ErrorResponse(request.callbackId, result.getException())));
+          session.getAsyncRemote().sendText(gson.toJson(new ErrorResponse(request.callbackId, result.getException())));
         }
       } catch (Throwable e) {
         log.error("Failed to send response: " + (requestResponse != null ? requestResponse.toString() : result.getException()), e);
