@@ -10,7 +10,7 @@ angular.module('angular.websocket.callback', []).factory('WebSocketService', ['$
 
     function ping () {
         ws.send("PING");
-        timeout = $timeout(ping, 180000);
+        timeout = $timeout(ping, 120000);
     }
 
     service.getWS = function(wsUrl) { //this method is only for testability
@@ -25,24 +25,26 @@ angular.module('angular.websocket.callback', []).factory('WebSocketService', ['$
         var websocket = service.getWS(wsUrl);
 
         websocket.onopen = function() {
-            timeout = $timeout(ping, 180000);
-            if (service.openCallback) service.openCallback();
+            timeout = $timeout(ping, 120000);
+            $rootScope.$broadcast('WebSocketService:onOpen');
         };
 
-        websocket.onerror = function() {
-            if (service.errorCallback) service.errorCallback("Failed to open a connection with the server!" );
+        websocket.onerror = function(event) {
+            $log.error(event);
+            $rootScope.$broadcast('WebSocketService:onError');
             $timeout.cancel(timeout);
         };
 
         websocket.onclose = function() {
-            if (service.errorCallback) service.errorCallback("Connection lost with the server, refresh page to retry!");
+            $log.info("Websocket closed!");
+            $rootScope.$broadcast('WebSocketService:onClose');
             $timeout.cancel(timeout);
         };
 
         websocket.onmessage = function(message) {
             var data = JSON.parse(message.data);
             if (data.callbackId) listener(data);
-            else service.callback(data);
+            else $rootScope.$apply(service.callback(data));
         };
 
         ws = websocket;
@@ -58,7 +60,7 @@ angular.module('angular.websocket.callback', []).factory('WebSocketService', ['$
         if(requestCallbacks.hasOwnProperty(response.callbackId)) {
             if (response.error) {
                 $log.error(response.stacktrace);
-                if (service.requestErrorCallback) service.requestErrorCallback(response.error);
+                $rootScope.$broadcast('WebSocketService:requestError', response.error);
                 $rootScope.$apply(requestCallbacks[response.callbackId].cb.reject(response.error));
             }
             else {
@@ -116,18 +118,6 @@ angular.module('angular.websocket.callback', []).factory('WebSocketService', ['$
 
     service.subscribe = function(callback) {
         service.callback = callback;
-    };
-
-    service.onSocketError = function(callback) {
-        service.errorCallback = callback;
-    };
-
-    service.onRequestError = function(callback) {
-        service.requestErrorCallback = callback;
-    };
-
-    service.onOpen = function(callback) {
-        service.openCallback = callback;
     };
 
     return service;
