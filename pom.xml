@@ -3,10 +3,35 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.poolik</groupId>
     <artifactId>callback-websocket</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>callback-websocket</name>
+    <url>https://github.com/poolik/callback-websocket</url>
+    <description>A lightweight framework to send Request - Reply style queries over a websocket</description>
+
+    <developers>
+        <developer>
+            <id>poolik</id>
+            <name>Tõnis Pool</name>
+            <email>tonis.pool@gmail.com</email>
+            <url>http://www.poolik.com</url>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git@github.com:poolik/callback-websocket.git</connection>
+        <url>scm:git:git@github.com:poolik/callback-websocket.git</url>
+        <developerConnection>scm:git:git@github.com:poolik/callback-websocket.git</developerConnection>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -15,8 +40,8 @@
         </dependency>
         <dependency>
             <groupId>com.poolik</groupId>
-            <artifactId>classutil</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>classfinder</artifactId>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.jboss</groupId>

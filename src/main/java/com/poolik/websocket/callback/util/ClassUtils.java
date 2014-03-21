@@ -95,7 +95,9 @@ public class ClassUtils {
   }
 
   private static ClassFilter getClassFilter(Class<?> interfaceName) {
-    return new AndClassFilter(new SubclassClassFilter(interfaceName), new NotClassFilter(new InterfaceOnlyClassFilter()),
-        new NotClassFilter(new AbstractClassFilter()));
+    return And.allOf(
+        Subclass.of(interfaceName),
+        Not.a(new Interface()),
+        Not.a(new AbstractClass()));
   }
 }

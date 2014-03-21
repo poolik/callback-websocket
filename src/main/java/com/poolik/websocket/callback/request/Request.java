@@ -35,7 +35,7 @@ public class Request implements WebsocketRequest {
   }
 
   @Override
-  public String getRequestData() {
+  public String getRequestBody() {
     return data;
   }
 }

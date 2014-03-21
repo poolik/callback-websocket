@@ -14,7 +14,7 @@ class RequestMappings {
   private static final Map<Pair<String, RequestType>, RequestHandler> mappings = getRequestMappings();
 
   private static Map<Pair<String, RequestType>, RequestHandler> getRequestMappings() {
-    List<RequestHandler> requestHandlers = getRequestActionHandlers();
+    List<RequestHandler> requestHandlers = getRequestHandlers();
     Map<Pair<String, RequestType>, RequestHandler> requestMappings = new HashMap<>();
     for (RequestHandler requestHandler : requestHandlers) {
       Pair<String, List<RequestType>> handlerRequestMappings = requestHandler.getRequestMappings();
@@ -25,16 +25,9 @@ class RequestMappings {
     return requestMappings;
   }
 
-  private static List<RequestHandler> getRequestActionHandlers() {
-    Collection<ClassInfo> foundClasses = null;
-    try {
-      foundClasses = ClassUtils.getImplementingInterface(RequestHandler.class);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
+  private static List<RequestHandler> getRequestHandlers() {
     List<RequestHandler> requestHandlers = new ArrayList<>();
-    for (ClassInfo classInfo : foundClasses) {
+    for (ClassInfo classInfo : getRequestHandlerImplementations()) {
       try {
         requestHandlers.add((RequestHandler) Class.forName(classInfo.getClassName()).newInstance());
       } catch (Exception e) {
@@ -44,9 +37,19 @@ class RequestMappings {
     return requestHandlers;
   }
 
+  private static Collection<ClassInfo> getRequestHandlerImplementations() {
+    Collection<ClassInfo> foundClasses = new ArrayList<>();
+    try {
+      foundClasses = ClassUtils.getImplementingInterface(RequestHandler.class);
+    } catch (Exception e) {
+      log.error("Failed to retrieve all implementations of " + RequestHandler.class.getSimpleName(), e);
+    }
+    return foundClasses;
+  }
+
   protected static RequestHandler getRequestAction(String url, RequestType type) {
     RequestHandler action = mappings.get(Pair.of(url, type));
-    if (action == null) throw new IllegalArgumentException("Invalid request URL: "+url+"!");
+    if (action == null) throw new IllegalArgumentException("Invalid request URL: " + url + "!");
     return action;
   }
 }

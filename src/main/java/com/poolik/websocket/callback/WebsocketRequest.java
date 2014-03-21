@@ -6,5 +6,5 @@ public interface WebsocketRequest {
 
   String getUrl();
   RequestType getRequestType();
-  String getRequestData();
+  String getRequestBody();
 }
