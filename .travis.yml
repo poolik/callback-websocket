@@ -1,0 +1,12 @@
+language: java
+jdk:
+  - oraclejdk8
+  - oraclejdk7
+  - openjdk7
+
+before_install:
+  - npm install -g karma karma-jasmine karma-phantomjs-launcher karma-junit-reporter karma-coverage
+  - npm install coveralls --save
+
+after_success:
+  - cat ./coverage/PhantomJS\ 1.9.1\ \(Mac\ OS\ X\)/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
