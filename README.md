@@ -66,15 +66,7 @@ To handle requests on the server side you need to do two things.
     
       @Override
       public WebsocketResponse handle(WebsocketRequest request) throws Exception {
-        return new HelloWorldResponse(request.getRequestData());
-      }
-    
-      class HelloWorldResponse implements WebsocketResponse {
-        public final String greeting;
-    
-        HelloWorldResponse(String firstname) {
-          this.greeting = "Hello " + firstname;
-        }
+        return new StringResponse("Hello " + request.getRequestBody());
       }
     }
     ```
