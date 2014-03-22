@@ -1,7 +1,7 @@
 *.class
 target/
 coverage
-test-result.xml
+test-results.xml
 .idea/
 *.iml
 # Package Files #
