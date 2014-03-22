@@ -1,6 +1,9 @@
 callback-websocket
 ==================
 
+[![Build Status](https://travis-ci.org/poolik/callback-websocket.svg?branch=master)](https://travis-ci.org/poolik/callback-websocket)
+[![Coverage Status](https://coveralls.io/repos/poolik/callback-websocket/badge.png?branch=master)](https://coveralls.io/r/poolik/callback-websocket?branch=master)
+
 A simple library to create request-response queries over java Websockets API
 # Why?
 
