@@ -10,6 +10,5 @@ before_install:
   - export PATH="./node_modules/karma/bin:$PATH"
 
 after_success:
-  - ls
-  - cat ./coverage/PhantomJS\ 1.9.1\ \(Mac\ OS\ X\)/lcov.info
+  - ls coverage
   - cat ./coverage/PhantomJS\ 1.9.1\ \(Mac\ OS\ X\)/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
