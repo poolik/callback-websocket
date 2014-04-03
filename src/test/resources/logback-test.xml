@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <appender name="A1" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{MM-dd@HH:mm:ss} %-5p [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <File>target/testlog/estmon-loc-test.log</File>
+        <encoder>
+            <pattern>%d{MM-dd@HH:mm:ss} %-5p [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="org.eclipse.jetty" level="WARN"/>
+    <logger name="ch.qos.logback" level="WARN"/>
+    <logger name="com.poolik.classfinder" level="INFO"/>
+    <root level="DEBUG">
+        <appender-ref ref="A1"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

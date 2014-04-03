@@ -20,13 +20,16 @@ public class WebsocketRequestHandler {
   private static final Logger log = LoggerFactory.getLogger(WebsocketRequestHandler.class);
   private static final ExecutorService executor = Executors.newCachedThreadPool();
 
-  public static void handleRequest(Session session, String message) {
-    if (PING.equals(message)) log.trace("Recieved ping, session ID: " + session.getId());
-    else {
+  public static F.Promise<Response> handleRequest(Session session, String message) {
+    F.Promise<Response> promise = new F.Promise<>();
+    if (PING.equals(message)) {
+      log.trace("Recieved ping, session ID: " + session.getId());
+      promise.invoke(null);
+    } else {
       Request request = gson.fromJson(message, Request.class);
-      F.Promise<Response> promise = new F.Promise<>();
       promise.onRedeem(new ResponseAction(session, request));
       executor.submit(new PromiseTask<>(new RequestResolver(request), promise));
     }
+    return promise;
   }
 }

@@ -27,7 +27,7 @@ public final class ResponseAction implements F.Action<F.Promise<Response>> {
       try {
         if (requestResponse != null) session.getAsyncRemote().sendText(gson.toJson(requestResponse));
         else {
-          log.error("Request " + request.type + request.url + " failed with: ", result.getException());
+          log.error("Request " + request.type + " '" + request.url + "' failed with: ", result.getException());
           session.getAsyncRemote().sendText(gson.toJson(new ErrorResponse(request.callbackId, result.getException())));
         }
       } catch (Throwable e) {

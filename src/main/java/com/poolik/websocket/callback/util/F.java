@@ -23,6 +23,11 @@ public class F {
     }
 
     public V getOrNull() {
+      try {
+        taskLock.await();
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
       return result;
     }
 
