@@ -23,7 +23,7 @@ public class WebsocketRequestHandler {
   public static F.Promise<Response> handleRequest(Session session, String message) {
     F.Promise<Response> promise = new F.Promise<>();
     if (PING.equals(message)) {
-      log.trace("Recieved ping, session ID: " + session.getId());
+      log.trace("Received ping, session ID: " + session.getId());
       promise.invoke(null);
     } else {
       Request request = gson.fromJson(message, Request.class);
