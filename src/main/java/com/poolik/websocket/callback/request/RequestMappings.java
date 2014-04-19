@@ -31,7 +31,7 @@ class RequestMappings {
       try {
         requestHandlers.add((RequestHandler) Class.forName(classInfo.getClassName()).newInstance());
       } catch (Exception e) {
-        log.error("Failed to initate requestHandler! ", e);
+        log.error("Failed to initiate requestHandler! ", e);
       }
     }
     return requestHandlers;
