@@ -8,7 +8,7 @@
     <version>1.0-SNAPSHOT</version>
     <name>callback-websocket</name>
     <url>https://github.com/poolik/callback-websocket</url>
-    <description>A lightweight framework to send Request - Reply style queries over a websocket</description>
+    <description>A lightweight library to send Request - Reply style queries over a websocket</description>
 
     <developers>
         <developer>
@@ -26,6 +26,20 @@
         <jacocoVersion>0.7.0.201403182114</jacocoVersion>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <name>Sonatype OSS Staging</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+            <layout>default</layout>
+        </repository>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype OSS Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <layout>default</layout>
+        </snapshotRepository>
+    </distributionManagement>
 
     <licenses>
         <license>
@@ -100,6 +114,11 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.17</version>
+            </plugin>
+            <plugin>
                 <groupId>com.kelveden</groupId>
                 <artifactId>maven-karma-plugin</artifactId>
                 <version>1.6</version>
@@ -116,4 +135,38 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>travis</id>
+            <activation>
+                <property>
+                    <name>env.TRAVIS</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacocoVersion}</version>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.eluder.coveralls</groupId>
+                        <artifactId>coveralls-maven-plugin</artifactId>
+                        <version>2.2.0</version>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

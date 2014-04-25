@@ -12,3 +12,4 @@ before_install:
 after_success:
   - ls coverage
   - cat ./coverage/PhantomJS\ 1.9.7\ \(Linux\)/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage
+  - mvn jacoco:report coveralls:jacoco
