@@ -11,11 +11,11 @@ public class F {
     protected boolean cancelled = false;
 
     public boolean cancel(boolean mayInterruptIfRunning) {
-      return false;
+      throw new UnsupportedOperationException("Cannot cancel a promise!");
     }
 
     public boolean isCancelled() {
-      return false;
+      throw new UnsupportedOperationException("Cannot cancel a promise!");
     }
 
     public boolean isDone() {
@@ -103,20 +103,12 @@ public class F {
 
         @Override
         public boolean cancel(boolean mayInterruptIfRunning) {
-          boolean r = true;
-          for (Promise<T> f : promises) {
-            r = r & f.cancel(mayInterruptIfRunning);
-          }
-          return r;
+          throw new UnsupportedOperationException("Cannot cancel a promise!");
         }
 
         @Override
         public boolean isCancelled() {
-          boolean r = true;
-          for (Promise<T> f : promises) {
-            r = r & f.isCancelled();
-          }
-          return r;
+          throw new UnsupportedOperationException("Cannot cancel a promise!");
         }
 
         @Override
@@ -209,7 +201,6 @@ public class F {
   }
 
   public static interface Action<T> {
-
     void invoke(T result);
   }
 
