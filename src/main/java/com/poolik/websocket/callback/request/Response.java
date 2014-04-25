@@ -2,7 +2,7 @@ package com.poolik.websocket.callback.request;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.poolik.websocket.callback.WebsocketResponse;
+import com.poolik.websocket.callback.WebSocketResponse;
 
 public class Response {
 
@@ -11,7 +11,7 @@ public class Response {
   public final String data;
   protected final String callbackId;
 
-  public Response(String callbackId, WebsocketResponse data) {
+  public Response(String callbackId, WebSocketResponse data) {
     this.callbackId = callbackId;
     this.data = gson.toJson(data);
   }

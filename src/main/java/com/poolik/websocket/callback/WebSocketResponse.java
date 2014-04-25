@@ -1,4 +1,4 @@
 package com.poolik.websocket.callback;
 
-public interface WebsocketResponse {
+public interface WebSocketResponse {
 }

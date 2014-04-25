@@ -1,8 +1,8 @@
 package util;
 
 import com.poolik.websocket.callback.RequestHandler;
-import com.poolik.websocket.callback.WebsocketRequest;
-import com.poolik.websocket.callback.WebsocketResponse;
+import com.poolik.websocket.callback.WebSocketResponse;
+import com.poolik.websocket.callback.WebSocketRequest;
 import com.poolik.websocket.callback.request.RequestType;
 import com.poolik.websocket.callback.response.Ok;
 import com.poolik.websocket.callback.util.Pair;
@@ -17,7 +17,7 @@ public class TestRequestHandler implements RequestHandler {
   }
 
   @Override
-  public WebsocketResponse handle(WebsocketRequest request) throws Exception {
+  public WebSocketResponse handle(WebSocketRequest request) throws Exception {
     return new Ok();
   }
 }

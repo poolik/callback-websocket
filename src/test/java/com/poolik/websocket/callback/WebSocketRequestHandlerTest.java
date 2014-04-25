@@ -1,7 +1,6 @@
 package com.poolik.websocket.callback;
 
 import com.google.gson.Gson;
-import com.poolik.websocket.callback.request.ErrorResponse;
 import com.poolik.websocket.callback.request.Request;
 import com.poolik.websocket.callback.request.RequestType;
 import com.poolik.websocket.callback.request.Response;
@@ -15,18 +14,17 @@ import javax.websocket.Session;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static org.mockito.Mockito.*;
 
-public class WebsocketRequestHandlerTest {
+public class WebSocketRequestHandlerTest {
 
   private Gson gson = new Gson();
 
   @Test
   public void doesNothingWhenReceivesPINGRequest() {
     Session session = mock(Session.class);
-    WebsocketRequestHandler.handleRequest(session, "PING");
+    new WebSocketRequestHandler().handleRequest(session, "PING");
 
     verify(session).getId();
     verifyNoMoreInteractions(session);
@@ -39,7 +37,7 @@ public class WebsocketRequestHandlerTest {
 
     when(session.isOpen()).thenReturn(true);
     when(session.getAsyncRemote()).thenReturn(asyncRemote);
-    WebsocketRequestHandler.handleRequest(session, gson.toJson(new Request(RequestType.GET, "/test", "", "1"))).get(1, TimeUnit.SECONDS);
+    new WebSocketRequestHandler().handleRequest(session, gson.toJson(new Request(RequestType.GET, "/test", "", "1"))).get(1, TimeUnit.SECONDS);
     Thread.sleep(50);
     verify(asyncRemote).sendText(gson.toJson(new Response("1", new Ok())));
     verifyNoMoreInteractions(asyncRemote);
@@ -53,7 +51,7 @@ public class WebsocketRequestHandlerTest {
     when(session.isOpen()).thenReturn(true);
     when(session.getAsyncRemote()).thenReturn(asyncRemote);
     try {
-      WebsocketRequestHandler.handleRequest(session, gson.toJson(new Request(RequestType.GET, "/error", "", "1"))).get(1, TimeUnit.SECONDS);
+      new WebSocketRequestHandler().handleRequest(session, gson.toJson(new Request(RequestType.GET, "/error", "", "1"))).get(1, TimeUnit.SECONDS);
     } catch (ExecutionException e) {
       if (!e.getCause().getClass().equals(IllegalStateException.class)) throw e;
     }

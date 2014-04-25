@@ -1,8 +1,8 @@
 package com.poolik.websocket.callback.request;
 
-import com.poolik.websocket.callback.WebsocketRequest;
+import com.poolik.websocket.callback.WebSocketRequest;
 
-public class Request implements WebsocketRequest {
+public class Request implements WebSocketRequest {
   public final RequestType type;
   public final String url;
   public final String data;
@@ -17,7 +17,7 @@ public class Request implements WebsocketRequest {
 
   @Override
   public String toString() {
-    return "WebsocketRequest{" +
+    return "WebSocketRequest{" +
         "type=" + type +
         ", url='" + url + '\'' +
         ", data='" + data + '\'' +

@@ -1,8 +1,8 @@
 package com.poolik.websocket.callback.response;
 
-import com.poolik.websocket.callback.WebsocketResponse;
+import com.poolik.websocket.callback.WebSocketResponse;
 
-public class StringResponse implements WebsocketResponse {
+public class StringResponse implements WebSocketResponse {
   public final String response;
 
   public StringResponse(String response) {
