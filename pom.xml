@@ -229,6 +229,15 @@
             </dependencies>
         </profile>
         <profile>
+            <id>java8</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <properties>
+                <jacoco.version>0.7.0.201403182114</jacoco.version>
+            </properties>
+        </profile>
+        <profile>
             <id>jboss-embedded</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
