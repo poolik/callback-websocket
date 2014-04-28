@@ -1,6 +1,7 @@
-package com.poolik.websocket.callback.util;
+package integration;
 
 import com.poolik.websocket.callback.RequestHandler;
+import com.poolik.websocket.callback.util.ClassUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import util.TestRequestHandler;
 
+import static org.hamcrest.core.AnyOf.anyOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -28,8 +30,7 @@ public class ClassUtilsTest {
   }
 
   @Test
-  public void findsRequestHandler() throws Exception {
-    assertThat(ClassUtils.getImplementingInterface(RequestHandler.class).size(), is(1));
+  public void findsRequestHandlerImplementations() throws Exception {
+    assertThat(ClassUtils.getImplementingInterface(RequestHandler.class).size(), anyOf(is(1), is(2)));
   }
-
 }
