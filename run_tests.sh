@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
 
-mvn clean test -Pjboss-embedded
-mvn clean test -Ptomcat-embedded
+mvn test -Pjboss-embedded
+mvn test -Ptomcat-embedded
 
