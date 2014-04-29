@@ -15,9 +15,13 @@ import javax.websocket.RemoteEndpoint;
 import javax.websocket.Session;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -41,7 +45,7 @@ public class WebSocketRequestMarshallerTest {
 
     when(session.isOpen()).thenReturn(true);
     when(session.getAsyncRemote()).thenReturn(asyncRemote);
-    new WebSocketRequestMarshaller().handleRequest(session, gson.toJson(new Request(RequestType.GET, "/test", "", "1"))).get(1, TimeUnit.SECONDS);
+    new WebSocketRequestMarshaller().handleRequest(session, gson.toJson(new Request(RequestType.GET, "/test", "", new HashMap<String, String>(), "1"))).get(1, TimeUnit.SECONDS);
     Thread.sleep(50);
     verify(asyncRemote).sendText(gson.toJson(new Response("1", new Ok())));
     verifyNoMoreInteractions(asyncRemote);
@@ -55,7 +59,7 @@ public class WebSocketRequestMarshallerTest {
     when(session.isOpen()).thenReturn(true);
     when(session.getAsyncRemote()).thenReturn(asyncRemote);
     try {
-      new WebSocketRequestMarshaller().handleRequest(session, gson.toJson(new Request(RequestType.GET, "/error", "", "1"))).get(1, TimeUnit.SECONDS);
+      new WebSocketRequestMarshaller().handleRequest(session, gson.toJson(new Request(RequestType.GET, "/error", "", new HashMap<String, String>(), "1"))).get(1, TimeUnit.SECONDS);
     } catch (ExecutionException e) {
       if (!e.getCause().getClass().equals(IllegalStateException.class)) throw e;
     }
@@ -67,8 +71,17 @@ public class WebSocketRequestMarshallerTest {
   @Test
   public void passesFiltersOnToRequestResolver() throws Exception {
     TestFilter testFilter = new TestFilter("/test", false);
-    new WebSocketRequestMarshaller(Arrays.<WebSocketFilter>asList(testFilter)).handleRequest(mock(Session.class), gson.toJson(new Request(RequestType.GET, "/test", "", "1")));
+    new WebSocketRequestMarshaller(Arrays.<WebSocketFilter>asList(testFilter)).handleRequest(mock(Session.class), gson.toJson(new Request(RequestType.GET, "/test", "", new HashMap<String, String>(), "1")));
     Thread.sleep(50);
     assertTrue(testFilter.filterCalled);
+  }
+
+  @Test
+  public void parsesHeadersCorrectly() throws Exception {
+    TestFilter testFilter = new TestFilter("/test", false);
+    new WebSocketRequestMarshaller(Arrays.<WebSocketFilter>asList(testFilter)).handleRequest(mock(Session.class), "{\"type\":\"POST\",\"url\":\"/test\",\"data\":\"\",\"headers\":{\"token\":\"234\"},\"callbackId\":1}");
+    Thread.sleep(50);
+    assertNotNull(testFilter.request);
+    assertThat(testFilter.request.getHeaders().get("token"), is("234"));
   }
 }

@@ -1,5 +1,5 @@
 'use strict';
-angular.module('angular.websocket.callback', []).factory('WebSocketService', ['$q', '$rootScope', '$timeout', '$log', function($q, $rootScope, $timeout, $log) {
+angular.module('angular.websocket.callback', []).factory('WebSocketService', ['$q', '$rootScope', '$timeout', '$log', '$window', function($q, $rootScope, $timeout, $log, $window) {
 
     var service = {};
     var ws = {};
@@ -90,6 +90,14 @@ angular.module('angular.websocket.callback', []).factory('WebSocketService', ['$
         return sendRequest("PUT", url, data);
     };
 
+    function getHeaders() {
+        var headers = {};
+        if ($window.sessionStorage.token) {
+            headers.token = $window.sessionStorage.token;
+        }
+        return headers;
+    }
+
     function sendRequest(type, url,  data) {
         if (typeof data !== "string") data = JSON.stringify(data);
         var defer = $q.defer();
@@ -97,7 +105,8 @@ angular.module('angular.websocket.callback', []).factory('WebSocketService', ['$
         var request = {
             type: type,
             url: url,
-            data: data
+            data: data,
+            headers: getHeaders()
         };
         requestCallbacks[callbackId] = {
             time: new Date(),

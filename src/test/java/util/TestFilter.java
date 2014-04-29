@@ -6,6 +6,7 @@ import com.poolik.websocket.callback.filter.UrlBasedFilter;
 
 public class TestFilter extends UrlBasedFilter {
   public boolean filterCalled = false;
+  public WebSocketRequest request = null;
   private final boolean filterResult;
   private final WebSocketResponse errorResponse;
   public TestFilter(String urlPattern, Boolean filterResult) {
@@ -22,7 +23,8 @@ public class TestFilter extends UrlBasedFilter {
 
   @Override
   public boolean filter(WebSocketRequest request) {
-    filterCalled = true;
+    this.request = request;
+    this.filterCalled = true;
     return filterResult;
   }
 

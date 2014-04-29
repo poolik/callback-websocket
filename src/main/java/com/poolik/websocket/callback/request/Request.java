@@ -2,16 +2,20 @@ package com.poolik.websocket.callback.request;
 
 import com.poolik.websocket.callback.WebSocketRequest;
 
+import java.util.Map;
+
 public class Request implements WebSocketRequest {
   public final RequestType type;
   public final String url;
   public final String data;
+  public final Map<String, String> headers;
   protected final String callbackId;
 
-  public Request(RequestType type, String url, String data, String callbackId) {
+  public Request(RequestType type, String url, String data, Map<String, String> headers, String callbackId) {
     this.type = type;
     this.url = url;
     this.data = data;
+    this.headers = headers;
     this.callbackId = callbackId;
   }
 
@@ -37,5 +41,10 @@ public class Request implements WebSocketRequest {
   @Override
   public String getRequestBody() {
     return data;
+  }
+
+  @Override
+  public Map<String, String> getHeaders() {
+    return headers;
   }
 }

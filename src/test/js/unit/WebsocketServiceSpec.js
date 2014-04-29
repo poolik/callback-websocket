@@ -9,12 +9,13 @@ describe('WebSocketService', function () {
         });
     });
 
-    var webSocketService, webSocket, $timeout;
+    var webSocketService, webSocket, $timeout, $window;
     beforeEach(function () {
         module('angular.websocket.callback');
 
-        inject(function ($injector, _$timeout_) {
+        inject(function ($injector, _$timeout_, _$window_) {
             $timeout = _$timeout_;
+            $window = _$window_;
             webSocketService = $injector.get('WebSocketService');
         });
         webSocket = {
@@ -107,6 +108,14 @@ describe('WebSocketService', function () {
         beforeEach(function () {
             webSocketService.connect()
         });
+
+        it('should attach token header if $window.sessionStorage.token is present', function () {
+            $window.sessionStorage.token = "test";
+            webSocketService.post("/test", {some: 'data'});
+            expect(webSocket.send).toHaveBeenCalledWith('{"type":"POST","url":"/test","data":"{\\"some\\":\\"data\\"}","headers":{"token":"test"},"callbackId":1}');
+            delete $window.sessionStorage.token;
+        });
+
         it('should send and recieve POST requests', function () {
             var requestComplete = false;
             var responseComplete = 1;
@@ -114,7 +123,7 @@ describe('WebSocketService', function () {
                 requestComplete = true;
                 responseComplete = response;
             });
-            expect(webSocket.send).toHaveBeenCalledWith('{"type":"POST","url":"/test","data":"{\\"some\\":\\"data\\"}","callbackId":1}');
+            expect(webSocket.send).toHaveBeenCalledWith('{"type":"POST","url":"/test","data":"{\\"some\\":\\"data\\"}","headers":{},"callbackId":1}');
             webSocket.onmessage({data: '{"data":2, "callbackId":1}'});
             expect(requestComplete).toBe(true);
             expect(responseComplete).toBe(2);
@@ -127,7 +136,7 @@ describe('WebSocketService', function () {
                 requestComplete = true;
                 responseComplete = response;
             });
-            expect(webSocket.send).toHaveBeenCalledWith('{"type":"GET","url":"/test","data":"{\\"some\\":\\"data\\"}","callbackId":1}');
+            expect(webSocket.send).toHaveBeenCalledWith('{"type":"GET","url":"/test","data":"{\\"some\\":\\"data\\"}","headers":{},"callbackId":1}');
             webSocket.onmessage({data: '{"data":2, "callbackId":1}'});
             expect(requestComplete).toBe(true);
             expect(responseComplete).toBe(2);
@@ -140,7 +149,7 @@ describe('WebSocketService', function () {
                 requestComplete = true;
                 responseComplete = response;
             });
-            expect(webSocket.send).toHaveBeenCalledWith('{"type":"GET","url":"/test","data":"","callbackId":1}');
+            expect(webSocket.send).toHaveBeenCalledWith('{"type":"GET","url":"/test","data":"","headers":{},"callbackId":1}');
             webSocket.onmessage({data: '{"data":2, "callbackId":1}'});
             expect(requestComplete).toBe(true);
             expect(responseComplete).toBe(2);
@@ -153,7 +162,7 @@ describe('WebSocketService', function () {
                 requestComplete = true;
                 responseComplete = response;
             });
-            expect(webSocket.send).toHaveBeenCalledWith('{"type":"DELETE","url":"/test","data":"{\\"some\\":\\"data\\"}","callbackId":1}');
+            expect(webSocket.send).toHaveBeenCalledWith('{"type":"DELETE","url":"/test","data":"{\\"some\\":\\"data\\"}","headers":{},"callbackId":1}');
             webSocket.onmessage({data: '{"data":3, "callbackId":1}'});
             expect(requestComplete).toBe(true);
             expect(responseComplete).toBe(3);
