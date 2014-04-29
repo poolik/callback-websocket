@@ -17,16 +17,16 @@ public final class RequestResolver implements Callable<Response> {
 
   @Override
   public Response call() throws Exception {
-    WebSocketResponse response = applyFilters();
-    if (response != null) return new Response(request.callbackId, response);
-    response = RequestMappings.getRequestAction(request.url, request.type).handle(request);
+    Exception exception = applyFilters();
+    if (exception != null) return new ErrorResponse(request.callbackId, exception);
+    WebSocketResponse response = RequestMappings.getRequestAction(request.url, request.type).handle(request);
     return new Response(request.callbackId, response);
   }
 
-  private WebSocketResponse applyFilters() {
+  private Exception applyFilters() {
     for (WebSocketFilter filter : filters) {
       if (filter.accepts(request))
-        if (!filter.filter(request)) return filter.getErrorResponse();
+        if (!filter.filter(request)) return filter.getError();
     }
     return null;
   }

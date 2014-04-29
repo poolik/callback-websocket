@@ -3,13 +3,12 @@ package com.poolik.websocket.callback.request;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-public class ErrorResponse {
+public class ErrorResponse extends Response {
   public final String error;
   public final String stacktrace;
-  public final String callbackId;
 
   public ErrorResponse(String callbackId, Throwable error) {
-    this.callbackId = callbackId;
+    super(callbackId, null);
     this.error = getErrorMessage(error);
     this.stacktrace = stactraceToString(error);
   }
