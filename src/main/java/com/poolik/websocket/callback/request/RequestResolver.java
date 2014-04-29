@@ -26,7 +26,7 @@ public final class RequestResolver implements Callable<Response> {
   private Exception applyFilters() {
     for (WebSocketFilter filter : filters) {
       if (filter.accepts(request))
-        if (!filter.filter(request)) return filter.getError();
+        if (!filter.filter(request)) return filter.getError(request.url);
     }
     return null;
   }

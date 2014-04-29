@@ -28,7 +28,7 @@ public class TestFilter extends UrlBasedFilter {
   }
 
   @Override
-  public Exception getError() {
+  public Exception getError(String url) {
     return errorResponse;
   }
 }
