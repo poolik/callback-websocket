@@ -21,14 +21,14 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
-public class WebSocketRequestHandlerTest {
+public class WebSocketRequestMarshallerTest {
 
   private Gson gson = new Gson();
 
   @Test
   public void doesNothingWhenReceivesPINGRequest() {
     Session session = mock(Session.class);
-    new WebSocketRequestHandler().handleRequest(session, "PING");
+    new WebSocketRequestMarshaller().handleRequest(session, "PING");
 
     verify(session).getId();
     verifyNoMoreInteractions(session);
@@ -41,7 +41,7 @@ public class WebSocketRequestHandlerTest {
 
     when(session.isOpen()).thenReturn(true);
     when(session.getAsyncRemote()).thenReturn(asyncRemote);
-    new WebSocketRequestHandler().handleRequest(session, gson.toJson(new Request(RequestType.GET, "/test", "", "1"))).get(1, TimeUnit.SECONDS);
+    new WebSocketRequestMarshaller().handleRequest(session, gson.toJson(new Request(RequestType.GET, "/test", "", "1"))).get(1, TimeUnit.SECONDS);
     Thread.sleep(50);
     verify(asyncRemote).sendText(gson.toJson(new Response("1", new Ok())));
     verifyNoMoreInteractions(asyncRemote);
@@ -55,7 +55,7 @@ public class WebSocketRequestHandlerTest {
     when(session.isOpen()).thenReturn(true);
     when(session.getAsyncRemote()).thenReturn(asyncRemote);
     try {
-      new WebSocketRequestHandler().handleRequest(session, gson.toJson(new Request(RequestType.GET, "/error", "", "1"))).get(1, TimeUnit.SECONDS);
+      new WebSocketRequestMarshaller().handleRequest(session, gson.toJson(new Request(RequestType.GET, "/error", "", "1"))).get(1, TimeUnit.SECONDS);
     } catch (ExecutionException e) {
       if (!e.getCause().getClass().equals(IllegalStateException.class)) throw e;
     }
@@ -67,7 +67,7 @@ public class WebSocketRequestHandlerTest {
   @Test
   public void passesFiltersOnToRequestResolver() throws Exception {
     TestFilter testFilter = new TestFilter("/test", false);
-    new WebSocketRequestHandler(Arrays.<WebSocketFilter>asList(testFilter)).handleRequest(mock(Session.class), gson.toJson(new Request(RequestType.GET, "/test", "", "1")));
+    new WebSocketRequestMarshaller(Arrays.<WebSocketFilter>asList(testFilter)).handleRequest(mock(Session.class), gson.toJson(new Request(RequestType.GET, "/test", "", "1")));
     Thread.sleep(50);
     assertTrue(testFilter.filterCalled);
   }
