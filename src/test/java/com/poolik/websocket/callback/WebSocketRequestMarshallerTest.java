@@ -79,7 +79,7 @@ public class WebSocketRequestMarshallerTest {
   @Test
   public void parsesHeadersCorrectly() throws Exception {
     TestFilter testFilter = new TestFilter("/test", false);
-    new WebSocketRequestMarshaller(Arrays.<WebSocketFilter>asList(testFilter)).handleRequest(mock(Session.class), "{\"type\":\"POST\",\"url\":\"/test\",\"data\":\"\",\"headers\":{\"token\":\"234\"},\"callbackId\":1}");
+    new WebSocketRequestMarshaller(Arrays.<WebSocketFilter>asList(testFilter)).handleRequest(mock(Session.class), "{\"type\":\"GET\",\"url\":\"/test\",\"data\":\"\",\"headers\":{\"token\":\"234\"},\"callbackId\":1}");
     Thread.sleep(50);
     assertNotNull(testFilter.request);
     assertThat(testFilter.request.getHeaders().get("token"), is("234"));

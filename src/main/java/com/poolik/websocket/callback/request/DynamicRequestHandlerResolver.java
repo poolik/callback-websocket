@@ -1,6 +1,7 @@
 package com.poolik.websocket.callback.request;
 
 import com.poolik.classfinder.info.ClassInfo;
+import com.poolik.websocket.callback.RequestHandlerResolver;
 import com.poolik.websocket.callback.WebSocketRequestHandler;
 import com.poolik.websocket.callback.util.ClassUtils;
 import com.poolik.websocket.callback.util.Pair;
@@ -9,23 +10,28 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-class RequestMappings {
-  private static final Logger log = LoggerFactory.getLogger(RequestMappings.class);
-  private static final Map<Pair<String, RequestType>, WebSocketRequestHandler> mappings = getRequestMappings();
+public class DynamicRequestHandlerResolver implements RequestHandlerResolver {
+  private static final Logger log = LoggerFactory.getLogger(DynamicRequestHandlerResolver.class);
+  private final Map<Pair<String, RequestType>, WebSocketRequestHandler> mappings = new HashMap<>();
 
-  private static Map<Pair<String, RequestType>, WebSocketRequestHandler> getRequestMappings() {
-    List<WebSocketRequestHandler> webSocketRequestHandlers = getRequestHandlers();
-    Map<Pair<String, RequestType>, WebSocketRequestHandler> requestMappings = new HashMap<>();
-    for (WebSocketRequestHandler webSocketRequestHandler : webSocketRequestHandlers) {
-      Pair<String, List<RequestType>> handlerRequestMappings = webSocketRequestHandler.getRequestMappings();
-      for (RequestType requestType : handlerRequestMappings.second) {
-        requestMappings.put(Pair.of(handlerRequestMappings.first, requestType), webSocketRequestHandler);
-      }
-    }
-    return requestMappings;
+  @Override
+  public WebSocketRequestHandler getHandlerFor(String url, RequestType type) {
+    WebSocketRequestHandler handler = mappings.get(Pair.of(url, type));
+    if (handler == null) throw new IllegalArgumentException("Invalid request URL: " + url + "!");
+    return handler;
   }
 
-  private static List<WebSocketRequestHandler> getRequestHandlers() {
+  @Override
+  public void findHandlers() {
+    for (WebSocketRequestHandler webSocketRequestHandler : getRequestHandlers()) {
+      Pair<String, List<RequestType>> handlerRequestMappings = webSocketRequestHandler.getRequestMappings();
+      for (RequestType requestType : handlerRequestMappings.second) {
+        mappings.put(Pair.of(handlerRequestMappings.first, requestType), webSocketRequestHandler);
+      }
+    }
+  }
+
+  private List<WebSocketRequestHandler> getRequestHandlers() {
     List<WebSocketRequestHandler> webSocketRequestHandlers = new ArrayList<>();
     for (ClassInfo classInfo : getRequestHandlerImplementations()) {
       try {
@@ -37,7 +43,7 @@ class RequestMappings {
     return webSocketRequestHandlers;
   }
 
-  private static Collection<ClassInfo> getRequestHandlerImplementations() {
+  private Collection<ClassInfo> getRequestHandlerImplementations() {
     Collection<ClassInfo> foundClasses = new ArrayList<>();
     try {
       foundClasses = ClassUtils.getImplementingInterface(WebSocketRequestHandler.class);
@@ -45,11 +51,5 @@ class RequestMappings {
       log.error("Failed to retrieve all implementations of " + WebSocketRequestHandler.class.getSimpleName(), e);
     }
     return foundClasses;
-  }
-
-  protected static WebSocketRequestHandler getRequestAction(String url, RequestType type) {
-    WebSocketRequestHandler action = mappings.get(Pair.of(url, type));
-    if (action == null) throw new IllegalArgumentException("Invalid request URL: " + url + "!");
-    return action;
   }
 }
