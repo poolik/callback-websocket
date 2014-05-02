@@ -103,14 +103,14 @@ If the ```boolean filter(WebSocketRequest request);``` returns false (ie. the fi
 
 # Authentication
 
-To implement authentication of requests an AuthenticationFilter is needed that, for example, filters all requests to */api/**. To achieve this from your login handler respond with an object that among the authenticated user details sets a signed JSON token. On the client side attach that token to the sessionStorage like so:
+To implement authentication of requests an AuthenticationFilter is needed that, for example, filters all requests to */api/**. To achieve this from your login handler respond with an object that among the authenticated user details sets a signed [JSON Web Token](http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html). On the client side attach that token to the sessionStorage like so:
 
 ```javascript
-$scope.submit = function () {
+$scope.login = function () {
     WebSocketService.post('/login', $scope.user).then(function (response) {
         $window.sessionStorage.token = response.token;
         $scope.message = 'Welcome';
-      }, function (data, status, headers, config) {
+      }, function (error) {
         delete $window.sessionStorage.token; // Erase the token if the user fails to log in
         $scope.message = 'Error: Invalid user or password';
       });
