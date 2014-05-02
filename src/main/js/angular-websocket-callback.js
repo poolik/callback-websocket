@@ -4,7 +4,7 @@ angular.module('angular.websocket.callback', []).factory('WebSocketService', ['$
     var service = {};
     var ws = {};
     var requestCallbacks = {};
-    var MAX_CONCURRENT_REQUESTS = 1000;
+    var MAX_CONCURRENT_REQUESTS = 10000;
     var currentCallbackId = 0;
     var timeout = {};
 
