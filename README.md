@@ -86,3 +86,51 @@ To handle requests on the server side you need to do two things.
 All WebSocketRequestHandler-s are dynamically found using [Classfinder](https://github.com/poolik/classfinder), so there's no need to register anything anywhere. To add a new handler simply create a class implementing ```WebSocketRequestHandler```.
     
 Full stack examples can be found [here](https://github.com/poolik/callback-websocket-examples) where hopefully you can get a better picture how everything fits together.
+
+# Filters
+
+```WebSocketRequestMarshaller``` constructor also accepts a Collection of ```WebSocketFilter```-s.
+```java
+public interface WebSocketFilter {
+  boolean accepts(WebSocketRequest request);
+  boolean filter(WebSocketRequest request);
+  Exception getError(String url);
+}
+```
+With filters each request can be preprocessed to add authentication, logging or whatever else capabilities. Out of the box an abstract ```UrlBasedFilter``` is available that filters request by the provided url regex. Users are meant to subclass it and implement the ```boolean filter(WebSocketRequest request);``` method
+
+If the ```boolean filter(WebSocketRequest request);``` returns false (ie. the filter rejects this request) then the error from ```Exception getError(String url);``` is returned to the client.
+
+# Authentication
+
+To implement authentication of requests an AuthenticationFilter is needed that, for example, filters all requests to */api/**. To achieve this from your login handler respond with an object that among the authenticated user details sets a signed JSON token. On the client side attach that token to the sessionStorage like so:
+
+```javascript
+$scope.submit = function () {
+    WebSocketService.post('/login', $scope.user).then(function (response) {
+        $window.sessionStorage.token = response.token;
+        $scope.message = 'Welcome';
+      }, function (data, status, headers, config) {
+        delete $window.sessionStorage.token; // Erase the token if the user fails to log in
+        $scope.message = 'Error: Invalid user or password';
+      });
+  };
+```
+
+The ```WebSocketService``` is sets the *token* header on every request if some value exists in ```$window.sessionStorage.token```. So in your authentication filter for protected urls you can simply retrieve the token via ```request.getHeaders().get("token")``` and verify it's signature to make sure the user is authenticated.
+
+More talk about JSON Web Token (JWT) based authentication can be found [here](https://auth0.com/blog/2014/01/07/angularjs-authentication-with-cookies-vs-token/). An example library to use in Java serverside is [nimbus-jose-jwt](http://connect2id.com/products/nimbus-jose-jwt) with code examples of how to create JWT-s and verify their signature [here](http://connect2id.com/products/nimbus-jose-jwt/examples/jws-with-hmac)
+
+Using the nimbus-jose-jwt library an Authentication filter can look something like this (using the HMAC protection):
+```java
+  @Override
+  public boolean filter(WebSocketRequest request) {
+    try {
+      JWSObject jwsObject = JWSObject.parse(request.getHeaders().get("token"));
+      return jwsObject.verify(new MACVerifier(JSON_WEB_TOKEN_SECRET));
+    } catch (Exception e) {
+      log.error("Failed to parse JSON web token", e);
+      return false;
+    }
+  }
+```
