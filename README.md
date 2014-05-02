@@ -15,7 +15,7 @@ The reasoning behind the callback-websocket library goes as this:
 
 If you already have fast a full duplex communication channel, why not channel all of the required communication through it and **completely stop using AJAX**.
 
-# Performance
+## Performance
 If you completely stop making AJAX requests and marshal all of your requests through one fast (already open) socket, naturally you're it's going to increase the speed of your requests.
 
 My testing shows that it **increases the speed of a request ~80%**
@@ -23,6 +23,22 @@ My testing shows that it **increases the speed of a request ~80%**
 
 But don't take my word for it, check out the [performance-comparison example](https://github.com/poolik/callback-websocket-examples/tree/master/performance-comparison) and run your own tests
 
+## Installation
+1. Just add a dependency like so:
+
+    ```xml
+    <dependency>
+        <groupId>com.poolik</groupId>
+        <artifactId>callback-websocket</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
+    ```
+2. Download the [angular.websocket.callback](https://github.com/poolik/callback-websocket/blob/master/src/main/js/angular-websocket-callback.js?raw=true) module and add it as a dependecy:
+
+    ```javascript
+    var app = angular.module('your-module', ['angular.websocket.callback']);
+    ```
+    
 # Example
 ## AngularJS Client
 
