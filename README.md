@@ -21,7 +21,7 @@ If you completely stop making AJAX requests and marshal all of your requests thr
 My testing shows that it **increases the speed of a request ~80%**
 ![Performance comparision](http://f.cl.ly/items/2O290L3A3C1Q3O3S3e1Z/performance_comparison_large.png)
 
-But don't take my word for it, check out the [performance-comparision example](https://github.com/poolik/callback-websocket-examples/tree/master/performance-comparision) and run your own tests
+But don't take my word for it, check out the [performance-comparison example](https://github.com/poolik/callback-websocket-examples/tree/master/performance-comparison) and run your own tests
 
 # Example
 ## AngularJS Client
