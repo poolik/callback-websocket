@@ -42,8 +42,9 @@ echo "git commit -m \"Prepare release callback-websocket-${version}\""
 echo "git tag callback-websocket-${version}"
 
 echo ""
-echo "3) build release"
-echo "mvn clean install"
+echo "3) test & build release"
+echo "sh run_tests.sh"
+echo "mvn clean install -DskipTests=true"
 
 echo ""
 echo "4) generate javadoc archive"
