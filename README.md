@@ -24,7 +24,7 @@ If you completely stop making AJAX requests and marshal all of your requests thr
 My testing shows that it **increases the speed of a request up to ~80%**
 ![Performance comparision](http://f.cl.ly/items/2O290L3A3C1Q3O3S3e1Z/performance_comparison_large.png)
 
-But don't take my word for it, check out the [performance-comparison example](https://github.com/poolik/callback-websocket-examples/tree/master/performance-comparison) and run your own tests
+But don't take my word for it, check out the [performance-comparison example](https://github.com/poolik/callback-websocket-examples/tree/master/performance-comparison) and run your own tests!
 
 ## Installation
 1. Just add a dependency like so:
@@ -36,7 +36,7 @@ But don't take my word for it, check out the [performance-comparison example](ht
         <version>1.0-SNAPSHOT</version>
     </dependency>
     ```
-2. Download the [angular.websocket.callback](https://github.com/poolik/callback-websocket/blob/master/src/main/js/angular-websocket-callback.js?raw=true) module and add it as a dependecy:
+2. Download the [angular.websocket.callback](https://github.com/poolik/callback-websocket/blob/master/src/main/js/angular-websocket-callback.js?raw=true) module and add it as a dependency:
 
     ```javascript
     var app = angular.module('your-module', ['angular.websocket.callback']);
@@ -45,7 +45,7 @@ But don't take my word for it, check out the [performance-comparison example](ht
 # Example
 ## AngularJS Client
 
-To send classic requests over a websocket, inject the ```WebSocketService``` in your controller
+To send classic requests over a WebSocket, inject the ```WebSocketService``` in your controller
 and invoke one of it's methods:
 * **.get("/url")** 
 * **.post("/url", {data:"data"})**
@@ -70,7 +70,7 @@ var DemoController = function ($scope, WebSocketService) {
 };
 ```
 
-To recieve any other data that might be pushed by the server to the client (some real-time notification) then use the
+To receive any other data that might be pushed by the server to the client (some real-time notification) then use the
 ```.subscribe(callback);``` method. For example:
 
 ```javascript
@@ -87,7 +87,7 @@ noc.factory('NotificationListener', function ($rootScope, WebSocketService) {
 
 ## Java server
 
-To handle requests on the server side you need to do two things.
+To handle requests on the server side you need to do two things:
 
 1. In your WebSocketEndpoint @OnMessage method marshal the request to WebSocketRequestMarshaller like so:
 
