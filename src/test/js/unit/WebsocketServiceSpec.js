@@ -206,5 +206,11 @@ describe('WebSocketService', function () {
             expect(requestComplete).toBe(false);
             expect(errorResponse).toBe('something bad!');
         });
+
+        it('should directly call websocket when sending binary', function () {
+            var binaryData = new ArrayBuffer(1);
+            webSocketService.sendBinary(binaryData);
+            expect(webSocket.send).toHaveBeenCalledWith(binaryData);
+        });
     })
 });
