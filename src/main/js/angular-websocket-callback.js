@@ -1,5 +1,5 @@
 'use strict';
-angular.module('angular.websocket.callback', []).factory('WebSocketService', ['$q', '$rootScope', '$timeout', '$log', function($q, $rootScope, $timeout, $log) {
+angular.module('angular.websocket.callback', []).factory('WebSocketService', ['$q', '$rootScope', '$timeout', '$window', '$log', function($q, $rootScope, $timeout, $window, $log) {
 
     var service = {};
     var ws = {};
