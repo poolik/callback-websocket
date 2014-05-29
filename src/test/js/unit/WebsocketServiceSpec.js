@@ -9,13 +9,14 @@ describe('WebSocketService', function () {
         });
     });
 
-    var webSocketService, webSocket, $timeout, $window;
+    var webSocketService, webSocket, $timeout, $window, $rootScope;
     beforeEach(function () {
         module('angular.websocket.callback');
 
-        inject(function ($injector, _$timeout_, _$window_) {
+        inject(function ($injector, _$timeout_, _$window_, _$rootScope_) {
             $timeout = _$timeout_;
             $window = _$window_;
+            $rootScope = _$rootScope_;
             webSocketService = $injector.get('WebSocketService');
         });
         webSocket = {
@@ -45,6 +46,31 @@ describe('WebSocketService', function () {
             webSocketService.connect();
             webSocketService.disconnect();
             expect(webSocket.close).toHaveBeenCalled();
+        });
+
+        it('should broadcast error if trying to send request, but socket has not been opened yet', function () {
+            var error = false;
+            $rootScope.$on('WebSocketService:requestError', function(){
+                error = true;
+            });
+            webSocketService.post("/test", {});
+            $rootScope.$digest();
+            expect(error).toBeTruthy();
+        });
+
+        it('should broadcast error if trying to send request, but socket closed', function () {
+            webSocketService.getWS.andReturn({
+                readyState: WebSocket.CLOSED,
+                send: function () {},
+                close: function () {}
+            });
+            var error = false;
+            $rootScope.$on('WebSocketService:requestError', function(){
+                error = true;
+            });
+            webSocketService.post("/test", {});
+            $rootScope.$digest();
+            expect(error).toBeTruthy();
         });
     });
 
@@ -179,6 +205,12 @@ describe('WebSocketService', function () {
             webSocket.onmessage({data: '{"error":"something bad!", "callbackId":1}'});
             expect(requestComplete).toBe(false);
             expect(errorResponse).toBe('something bad!');
+        });
+
+        it('should directly call websocket when sending binary', function () {
+            var binaryData = new ArrayBuffer(1);
+            webSocketService.sendBinary(binaryData);
+            expect(webSocket.send).toHaveBeenCalledWith(binaryData);
         });
     })
 });

@@ -44,9 +44,10 @@ public class WebSocketRequestMarshaller {
       promise.invoke(null);
     } else {
       Request request = gson.fromJson(message, Request.class);
-      promise.onRedeem(new ResponseAction(session, request));
+      request.session = session;
+      promise.onRedeem(new ResponseAction(request));
       executor.submit(new PromiseTask<>(
-          new RequestAction(request, filters, handlerResolver.getHandlerFor(request.url, request.type)),
+          new RequestAction(request, filters, handlerResolver),
           promise));
     }
     return promise;

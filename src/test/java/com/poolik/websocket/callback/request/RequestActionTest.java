@@ -23,7 +23,7 @@ public class RequestActionTest {
     Exception errorResponse = new Exception("test");
     RequestHandlerResolver handlerResolver = new DynamicRequestHandlerResolver();
     handlerResolver.findHandlers();
-    Response response = new RequestAction(new Request(RequestType.GET, "/test", "", new HashMap<String, String>(), "1"), Arrays.<WebSocketFilter>asList(new TestFilter("/test", false, errorResponse)), handlerResolver.getHandlerFor("/test", RequestType.GET)).call();
+    Response response = new RequestAction(new Request(RequestType.GET, "/test", "", new HashMap<String, String>(), "1"), Arrays.<WebSocketFilter>asList(new TestFilter("/test", false, errorResponse)), handlerResolver).call();
 
     assertThat(response, instanceOf(ErrorResponse.class));
     assertThat(((ErrorResponse) response).error, is("Request failed with: test"));
@@ -34,7 +34,7 @@ public class RequestActionTest {
     Exception errorResponse = new Exception("test");
     RequestHandlerResolver handlerResolver = new DynamicRequestHandlerResolver();
     handlerResolver.findHandlers();
-    Response response = new RequestAction(new Request(RequestType.GET, "/test", "", new HashMap<String, String>(), "1"), Arrays.<WebSocketFilter>asList(new TestFilter("/test", true, errorResponse)), handlerResolver.getHandlerFor("/test", RequestType.GET)).call();
+    Response response = new RequestAction(new Request(RequestType.GET, "/test", "", new HashMap<String, String>(), "1"), Arrays.<WebSocketFilter>asList(new TestFilter("/test", true, errorResponse)), handlerResolver).call();
 
     assertThat(gson.fromJson(response.data,Ok.class).status, is("OK"));
   }

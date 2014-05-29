@@ -2,6 +2,7 @@ package com.poolik.websocket.callback.request;
 
 import com.poolik.websocket.callback.WebSocketRequest;
 
+import javax.websocket.Session;
 import java.util.Map;
 
 public class Request implements WebSocketRequest {
@@ -10,6 +11,7 @@ public class Request implements WebSocketRequest {
   public final String data;
   public final Map<String, String> headers;
   protected final String callbackId;
+  public Session session;
 
   public Request(RequestType type, String url, String data, Map<String, String> headers, String callbackId) {
     this.type = type;
@@ -46,5 +48,10 @@ public class Request implements WebSocketRequest {
   @Override
   public Map<String, String> getHeaders() {
     return headers;
+  }
+
+  @Override
+  public Session getSession() {
+    return session;
   }
 }

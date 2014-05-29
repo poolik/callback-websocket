@@ -1,5 +1,5 @@
 'use strict';
-angular.module('angular.websocket.callback', []).factory('WebSocketService', ['$q', '$rootScope', '$timeout', '$log', '$window', function($q, $rootScope, $timeout, $log, $window) {
+angular.module('angular.websocket.callback', []).factory('WebSocketService', ['$q', '$rootScope', '$timeout', '$window', '$log', function($q, $rootScope, $timeout, $window, $log) {
 
     var service = {};
     var ws = {};
@@ -90,6 +90,23 @@ angular.module('angular.websocket.callback', []).factory('WebSocketService', ['$
         return sendRequest("PUT", url, data);
     };
 
+    service.sendBinary = function(binaryData) {
+        if (webSocketNotOpen()) {
+            return broadCastErrorAndGetRejectedPromise();
+        } else ws.send(binaryData);
+    };
+
+    function broadCastErrorAndGetRejectedPromise() {
+        var deferred = $q.defer();
+        $rootScope.$broadcast('WebSocketService:requestError', "tried to send request when websocket is not open");
+        deferred.reject("tried to send request when websocket is not open");
+        return deferred.promise;
+    }
+
+    function webSocketNotOpen() {
+        return !ws || ws.readyState != WebSocket.OPEN;
+    }
+
     function getHeaders() {
         var headers = {};
         if ($window.sessionStorage.token) {
@@ -99,6 +116,9 @@ angular.module('angular.websocket.callback', []).factory('WebSocketService', ['$
     }
 
     function sendRequest(type, url,  data) {
+        if (webSocketNotOpen()) {
+            return broadCastErrorAndGetRejectedPromise();
+        }
         if (typeof data !== "string") data = JSON.stringify(data);
         var defer = $q.defer();
         var callbackId = getCallbackId();
