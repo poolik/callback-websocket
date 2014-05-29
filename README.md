@@ -33,7 +33,7 @@ But don't take my word for it, check out the [performance-comparison example](ht
     <dependency>
         <groupId>com.poolik</groupId>
         <artifactId>callback-websocket</artifactId>
-        <version>1.0</version>
+        <version>1.2</version>
     </dependency>
     ```
 2. Download the [angular.websocket.callback](https://github.com/poolik/callback-websocket/blob/master/src/main/js/angular-websocket-callback.js?raw=true) module and add it as a dependency:
